@@ -44,9 +44,19 @@ $VERSION     = 1.00;
                   );
 
 sub run_cgquery {
-  my ($query) = @_;
-  
-  return `cgquery -a '$query'`;
+  my ($query, $args) = @_;
+
+  my @args;
+  push(@args, "cgquery");
+  if ($args->{xml} ne "") {
+    push(@args, "-o " . $args->{xml});
+  }
+  if ($args->{attr} == 1) {
+    push(@args, "-a");
+  }
+  my $command = join(" ", @args, "'$query'");
+  my $result = `$command`;  
+  return $result;
 }
 
 
