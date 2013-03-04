@@ -1,5 +1,6 @@
-#!/usr/bin/perl -w
+#!/opt/sam/perl/5.16.0/gcc41/bin/perl -w
 use strict;
+use warnings;
 use cghub;
 use Data::Dumper;
 use Getopt::Long;
