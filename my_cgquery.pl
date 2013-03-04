@@ -1,4 +1,4 @@
-#!/opt/sam/perl/5.16.0/gcc41/bin/perl -w
+#!/opt/sam/perl/5.16.2/gcc45/bin/perl
 use strict;
 use warnings;
 use cghub;
