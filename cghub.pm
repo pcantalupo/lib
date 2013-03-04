@@ -41,6 +41,7 @@ $VERSION     = 1.00;
 @EXPORT      = qw(run_cgquery
                   hash_result_by_aid
                   cgresult2tsv
+                  analysis_date_from_xml
                   );
 
 sub run_cgquery {
@@ -57,6 +58,21 @@ sub run_cgquery {
   my $command = join(" ", @args, "'$query'");
   my $result = `$command`;  
   return $result;
+}
+
+sub analysis_date_from_xml {
+  my $xmlfile = shift;
+  
+  use XML::Simple qw(:strict);
+  my $config = XMLin( $xmlfile , KeyAttr => {}, ForceArray => 1);
+
+  my $aid = $config->{Result}->[0]->{analysis_id}->[0];
+  my $ana_center_name = $config->{Result}->[0]->{analysis_xml}->[0]->{ANALYSIS_SET}->[0]->{ANALYSIS}->[0]->{center_name};
+  my $ana_alias = $config->{Result}->[0]->{analysis_xml}->[0]->{ANALYSIS_SET}->[0]->{ANALYSIS}->[0]->{alias};
+  my $ana_analysis_date = $config->{Result}->[0]->{analysis_xml}->[0]->{ANALYSIS_SET}->[0]->{ANALYSIS}->[0]->{analysis_date};
+  my $ana_title = $config->{Result}->[0]->{analysis_xml}->[0]->{ANALYSIS_SET}->[0]->{ANALYSIS}->[0]->{TITLE}->[0];
+
+  return join ("\t", $aid, $ana_analysis_date, $ana_center_name, $ana_alias, $ana_title);
 }
 
 
