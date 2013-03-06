@@ -3,5 +3,7 @@ use strict;
 use warnings;
 use cghub;
 
-print analysis_date_from_xml( shift ),"\n";
+foreach (@ARGV) {
+  print analysis_date_from_xml( $_ ),"\n";
+}
 
