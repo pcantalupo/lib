@@ -70,6 +70,10 @@ sub analysis_date_from_xml {
   my $ana_center_name = $config->{Result}->[0]->{analysis_xml}->[0]->{ANALYSIS_SET}->[0]->{ANALYSIS}->[0]->{center_name};
   my $ana_alias = $config->{Result}->[0]->{analysis_xml}->[0]->{ANALYSIS_SET}->[0]->{ANALYSIS}->[0]->{alias};
   my $ana_analysis_date = $config->{Result}->[0]->{analysis_xml}->[0]->{ANALYSIS_SET}->[0]->{ANALYSIS}->[0]->{analysis_date};
+  
+  if (!defined $ana_analysis_date) {
+    $ana_analysis_date = $config->{Result}->[0]->{run_xml}->[0]->{RUN_SET}->[0]->{RUN}->[0]->{run_date};
+  }
   my $ana_title = $config->{Result}->[0]->{analysis_xml}->[0]->{ANALYSIS_SET}->[0]->{ANALYSIS}->[0]->{TITLE}->[0];
 
   return join ("\t", $aid, $ana_analysis_date, $ana_center_name, $ana_alias, $ana_title);
