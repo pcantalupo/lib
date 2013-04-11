@@ -94,6 +94,7 @@ sub hash_result_by_aid {
       s/^\s+//;
       next if (/^Files/);
       my ($name,$value) = $_ =~ /^(\S+)\s+:\s+(.*)$/;
+      next if (exists $record_info{$name});
       $record_info{$name} = $value;
     }
     
