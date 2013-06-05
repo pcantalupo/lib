@@ -1,7 +1,4 @@
 package FileTable;
-
-# written on 5/23/13 by Josh Katz
-
 use strict;
 use warnings;
 
@@ -21,7 +18,7 @@ sub new{
 	}
 	while(<IN>){
 		next if $_ =~ /^\#/ || $_ =~ /^\s+$/;	
-		chomp;
+		$_ =~ s/\s+$//;
 		my @cols = split /$d/,$_;
 		my %mm;
 		for(my $i = 0; $i < scalar @ids; $i++){
@@ -124,4 +121,3 @@ sub Print{
 	}
 }
 1;
-
