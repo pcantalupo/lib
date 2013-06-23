@@ -109,7 +109,7 @@ sub hash_result_by_aid {
 sub cgresult2tsv {
   my $resultset = shift;
 
-  while ($resultset =~ /^    Result \d+.*\n((^(?!\s+Result \d+).*\n)+)/gm) {
+  while ($resultset =~ /^    Result \d+.*\n((^(?!$).*\n)+)/gm) {
     my $result = $1;
     my @rows = split /\n/, $result;
 
