@@ -4,7 +4,7 @@ use warnings;
 use Getopt::Long;
 
 my $human_accfile;
-GetOptions ("humanacc|h" => \$human_accfile);
+GetOptions ("humanacc|h=s" => \$human_accfile);
 
 my $humfile;
 my %humacc = ();
