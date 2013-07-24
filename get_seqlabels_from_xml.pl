@@ -10,7 +10,7 @@ my $humfile;
 my %humacc = ();
 if ($human_accfile) {
   open ($humfile, "<", $human_accfile);
-  while ($humfile) {
+  while (<$humfile>) {
     chomp;
     $humacc{$_}++;
   }
