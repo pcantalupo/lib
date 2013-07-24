@@ -1,7 +1,20 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use Getopt::Long;
 
+my $human_accfile;
+GetOptions ("humanacc|h" => \$human_accfile);
+
+my $humfile;
+my %humacc = ();
+if ($human_accfile) {
+  open ($humfile, "<", $human_accfile);
+  while ($humfile) {
+    chomp;
+    $humacc{$_}++;
+  }
+}
 
 while (<>) {
   
@@ -12,6 +25,12 @@ while (<>) {
     /seq_label="(\S+)"/;
     $s = $1;
     
-    print "$a\t$s\n" if ($a && $s);
+    next unless ($a && $s);
+
+    if ($humfile) {
+      print "$a\t$s\n" if (exists $humacc{$a});
+    } else {
+      print "$a\t$s\n";
+    }
   }
 }
