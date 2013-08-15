@@ -12,7 +12,7 @@ use Getopt::Long;
 #          my_cgquery.pl -d KIRC -l RNA-Seq -x "PROGRAM>MapspliceRSEM" (or "PROGRAM>RNAseqAlignmentBWA" for other pipeline)
 #               get MapspliceRSEM pipeline results for RNA-Seq of KIRC 
 
-my ($pid, $aid, $did, $lid, $qid, $lastmod, $xmltext);
+my ($pid, $aid, $did, $lid, $qid, $lastmod, $xmltext, $nolive);
 my $study = "phs000178";             # default is the TCGA study
 my $outputxml = "";
 my $attr = 1;                 # get analysisAttribute (-a flag) not analysisObject information
@@ -25,13 +25,14 @@ GetOptions ("participant|p=s" => \$pid,
             "outputxml|o=s"   => \$outputxml,
             "attr|r"          => \$attr,              # specify -r on commandline if you don't want analysisAttributes
             "lastmod|m=s"     => \$lastmod,
-            "study|s=s"       => \$study
+            "study|s=s"       => \$study,
+            "nolive|v"        => \$nolive,            # specify -v on command line if you don't state=live
             );
 
 exec("echo specify -p, -a, -d, -l, -q") unless ($pid || $aid || $did || $lid || $qid || $xmltext);
 
 my @parts;
-push (@parts, "state=live");
+push (@parts, "state=live")            unless ($nolive);
 push (@parts, "study=phs000178")       if $study;
 push (@parts, "participant_id=$pid")   if $pid;
 push (@parts, "analysis_id=$aid")      if $aid;
