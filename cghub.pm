@@ -76,6 +76,7 @@ sub analysis_date_from_xml {
   }
   my $ana_title = $config->{Result}->[0]->{analysis_xml}->[0]->{ANALYSIS_SET}->[0]->{ANALYSIS}->[0]->{TITLE}->[0];
 
+  $ana_analysis_date = "" if (!defined $ana_analysis_date);
   return join ("\t", $aid, $ana_analysis_date, $ana_center_name, $ana_alias, $ana_title);
 }
 
