@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use Test::More  tests => 3;
+use Test::More  tests => 5;
 
 BEGIN {
   use_ok('Bamtools');
@@ -24,4 +24,27 @@ foreach (@refaligns) {
   }
 }
 is ($nfields, 2, "number of fields returned by bam2refnumaligns is 2");
+
+
+my $expected_stats = '
+**********************************************
+Stats for BAM file(s): 
+**********************************************
+
+Total reads:       1473
+Mapped reads:      1473	(100%)
+Forward strand:    632	(42.9056%)
+Reverse strand:    841	(57.0944%)
+Failed QC:         0	(0%)
+Duplicates:        0	(0%)
+Paired-end reads:  0	(0%)
+
+';
+
+my @bt_stats = bamtools_stats($file);
+my $bt_stats = join("", @bt_stats);
+is($bt_stats, $expected_stats, "bamtools stats ok");
+
+my $mr = num_mapped_reads(@bt_stats);
+is($mr, '1473	(100%)', 'num mapped reads ok');
 
