@@ -7,29 +7,55 @@ sub new{
 	my $self = {};
 	my $f = shift;
 	my $d = shift;
+	my $stream = shift;
 	my @ids = @_;
-	die "Need delimiter \n" if !$d;
-	die "Need file then delimiter\n" if ! -s $f;
-	open IN,"$f";
+	die "$d: Need delimiter \n" if !$d;
+	die "$f: File not found\n" if ! -s $f;
+	my $s;
+	open $s,"$f";
 	my @rows;
 	if(!@ids){
-		my $h = <IN>;
+		my $h = <$s>;
 		@ids = Header($h,$d);	
 	}
-	while(<IN>){
-		next if $_ =~ /^\#/ || $_ =~ /^\s+$/;	
-		$_ =~ s/\s+$//;
-		my @cols = split /$d/,$_;
-		my %mm;
-		for(my $i = 0; $i < scalar @ids; $i++){
-			$mm{$ids[$i]} = $cols[$i];
+	if(!$stream){
+		while(<$s>){
+			next if $_ =~ /^\#/ || $_ =~ /^\s+$/;	
+			my %mm = HashLine($_,$d,@ids);
+			push(@rows,\%mm);
 		}
-		push(@rows,\%mm);
+		$self->{'rows'} = \@rows;
 	}
-	$self->{'rows'} = \@rows;
+	else{
+		$self->{'stream'} = $s;	
+	}
 	$self->{'columns'} = \@ids;
+	$self->{'delim'} = $d;
 	bless $self, $class;
 	return $self;	
+}
+sub NextHash{
+	my $self = shift;
+	die "Stream not set\n" if !$self->{'stream'};
+	my $s = $self->{'stream'};
+	my $line = <$s>;
+	return HashLine($line,$self->{'delim'},@{$self->{'columns'}}) if defined($line) && $line !~ /^\s+$/;
+	return;
+}	
+sub HashLine{
+	my $line = shift;
+	my $d = shift;	
+	my @ids = @_;
+	my %toReturn;
+	$line =~ s/\s+$|^\s+//g;
+	#print $line,$/;
+	my @cols = split /$d/,$line;
+	for(my $i = 0; $i < scalar @ids; $i++){
+		#print $ids[$i],$/;
+		$cols[$i] =~ s/\'|\"//g if $cols[$i];
+		$toReturn{$ids[$i]} = $cols[$i];
+	}
+	return %toReturn;
 }
 sub AddColumn{
 	my $self = shift;
