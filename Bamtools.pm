@@ -7,6 +7,7 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw(bam2refnumaligns
                  bamtools_stats
                  num_mapped_reads
+                 get_reads_for_each_qname
                 );
 
 
@@ -43,6 +44,32 @@ sub num_mapped_reads {
   
   return $mr;
 }
+
+sub get_reads_for_each_qname {
+  my ($file) = @_;
+
+  open(my $BAM, "samtools view $file |");
+  my %refs;
+  while (<$BAM>) {
+    chomp;
+    my ($qname, undef, $rname) = split(/\t/,$_);
+    push(@{$refs{$rname}}, $qname);
+  }
+  close($BAM);
+
+=head
+  # example of how to print out comma deliminted set of QNAMES per RNAME
+  foreach (keys %refs) {
+    print $_,
+          "\t",
+          join( ",", @{$refs{$_}} ),
+          $/;
+  }
+=cut
+
+  return %refs;
+}
+
 
 
 
